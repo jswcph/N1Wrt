@@ -171,14 +171,14 @@ on:
       rootfs_partsize:
         description: '软件包大小1G固定'
         required: true
-        default: "1024"
+        default: "2048"
         type: choice
         options:
-          - '1024'
+          - '2048'
       builder_name:
         description: "设置打包作者的名称"
         required: true
-        default: 'wukongdaily'
+        default: 'iFengke'
 
 jobs:
   build:

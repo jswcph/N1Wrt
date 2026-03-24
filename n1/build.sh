@@ -55,6 +55,13 @@ sed -i '1i\
 arch aarch64_generic 10\n\
 arch aarch64_cortex-a53 15' repositories.conf
 
+# 修改默认主机名 (把 MyRouter 改成你喜欢的名字)
+mkdir -p files/etc/config
+echo "config system
+    option hostname 'iStoreOs'
+    option timezone 'CST-8'
+    option zonename 'Asia/Shanghai'" > files/etc/config/system
+
 # ======== shell/custom-packages.sh =======
 # 合并imm仓库以外的第三方插件
 PACKAGES="$PACKAGES $CUSTOM_PACKAGES"

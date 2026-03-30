@@ -74,6 +74,13 @@ PACKAGES="$PACKAGES luci-i18n-samba4-zh-cn"
 # ======== shell/custom-packages.sh =======
 PACKAGES="$PACKAGES $CUSTOM_PACKAGES"
 
+# 修改默认主机名 (把 MyRouter 改成你喜欢的名字)
+mkdir -p files/etc/config
+echo "config system
+    option hostname 'iStoreOs'
+    option timezone 'CST-8'
+    option zonename 'Asia/Shanghai'" > files/etc/config/system
+
 # 判断是否需要编译 Docker 插件
 if [ "$INCLUDE_DOCKER" = "yes" ]; then
     PACKAGES="$PACKAGES luci-i18n-dockerman-zh-cn"

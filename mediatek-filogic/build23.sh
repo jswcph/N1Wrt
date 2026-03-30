@@ -106,21 +106,13 @@ fi
 uci set wireless.default_radio0.ssid='OpenWrt_5G'
 uci set wireless.default_radio0.key='password'
 uci set wireless.default_radio0.encryption='psk2'
-
-
+uci set wireless.radio0.htmode='HE160'
 
 # 设置 2.4G WiFi (通常对应 radio1)
-
 uci set wireless.default_radio1.ssid='OpenWrt_2.4G'
-
 uci set wireless.default_radio1.key='password'
-
 uci set wireless.default_radio1.encryption='psk2'
-
-uci set wireless.radio1.channel='6'
-
 uci set wireless.radio1.htmode='HT40'
-uci set wireless.radio0.htmode='HE160'
 
 # 构建镜像
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Building image with the following packages:"

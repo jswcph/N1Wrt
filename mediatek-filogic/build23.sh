@@ -81,6 +81,30 @@ echo "config system
     option timezone 'CST-8'
     option zonename 'Asia/Shanghai'" > files/etc/config/system
 
+    # 设置 2.4G WiFi (通常对应 radio0)
+uci set wireless.default_radio1.ssid='OpenWrt_2.4G'
+uci set wireless.default_radio1.key='password'
+uci set wireless.default_radio1.encryption='psk2'
+uci set wireless.radio1.htmode='HT40'
+
+# 设置 5G WiFi (通常对应 radio1)
+uci set wireless.default_radio0.ssid='OpenWrt_5G'
+uci set wireless.default_radio0.key='password'
+uci set wireless.default_radio0.encryption='psk2'
+uci set wireless.radio0.htmode='HE160'
+
+# 设置默认密码为 password
+echo "Setting default root password to 'password'"
+mkdir -p /home/build/immortalwrt/files/etc
+# 生成 shadow 文件，将 root 的密码 hash 写入
+cat << EOF > /home/build/immortalwrt/files/etc/shadow
+root:\$1\$wEeGj7S8\$v.Z8S998N.v69uR4j4/1E.:19672:0:99999:7:::
+daemon:*:0:0:99999:7:::
+ftp:*:0:0:99999:7:::
+network:*:0:0:99999:7:::
+nobody:*:0:0:99999:7:::
+EOF
+
 # 判断是否需要编译 Docker 插件
 if [ "$INCLUDE_DOCKER" = "yes" ]; then
     PACKAGES="$PACKAGES luci-i18n-dockerman-zh-cn"
@@ -102,17 +126,7 @@ else
     echo "⚪️ 未选择 luci-app-openclash"
 fi
 
-# 设置 2.4G WiFi (通常对应 radio0)
-uci set wireless.default_radio1.ssid='OpenWrt_2.4G'
-uci set wireless.default_radio1.key='password'
-uci set wireless.default_radio1.encryption='psk2'
-uci set wireless.radio1.htmode='HT40'
 
-# 设置 5G WiFi (通常对应 radio1)
-uci set wireless.default_radio0.ssid='OpenWrt_5G'
-uci set wireless.default_radio0.key='password'
-uci set wireless.default_radio0.encryption='psk2'
-uci set wireless.radio0.htmode='HE160'
 
 # 构建镜像
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Building image with the following packages:"

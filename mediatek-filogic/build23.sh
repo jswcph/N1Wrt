@@ -94,7 +94,30 @@ if echo "$PACKAGES" | grep -q "luci-app-openclash"; then
 else
     echo "⚪️ 未选择 luci-app-openclash"
 fi
+# 修改默认主机名
+mkdir -p /home/build/immortalwrt/files/etc/config
+cat << EOF > /home/build/immortalwrt/files/etc/config/system
+config system
+    option hostname 'OpenWrt'
+    option zonename 'Asia/Shanghai'
+    option timezone 'CST-8'
 
+config timeserver 'ntp'
+    list server 'ntp.aliyun.com'
+    list server 'time1.cloud.tencent.com'
+    option enabled '1'
+    option enable_server '0'
+EOF
+
+# 设置默认密码为 password (加密字符串为 $1$V4UetPzk$CY6KVfy4hzBy5Z.4X03081)
+mkdir -p /home/build/immortalwrt/files/etc/uci-defaults
+cat << 'EOF' > /home/build/immortalwrt/files/etc/uci-defaults/99-set-password
+#!/bin/sh
+# 使用 sed 直接替换 shadow 文件中 root 的密码槽位
+sed -i 's/^root:[^:]*:/root:$1$V4UetPzk$CY6KVfy4hzBy5Z.4X03081:/' /etc/shadow
+exit 0
+EOF
+chmod +x /home/build/immortalwrt/files/etc/uci-defaults/99-set-password
 
 # 构建镜像
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Building image with the following packages:"

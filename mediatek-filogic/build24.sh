@@ -107,12 +107,12 @@ config timeserver 'ntp'
     option enable_server '0'
 EOF
 
-# 设置默认密码为 password
+# 设置默认密码为 password (加密字符串为 $1$V4UetPzk$CY6KVfy4hzBy5Z.4X03081)
 mkdir -p /home/build/immortalwrt/files/etc/uci-defaults
-cat << EOF > /home/build/immortalwrt/files/etc/uci-defaults/99-set-password
+cat << 'EOF' > /home/build/immortalwrt/files/etc/uci-defaults/99-set-password
 #!/bin/sh
-echo "password" | passwd root
-echo "password" | passwd root
+# 使用 sed 直接替换 shadow 文件中 root 的密码槽位
+sed -i 's/^root:[^:]*:/root:$1$V4UetPzk$CY6KVfy4hzBy5Z.4X03081:/' /etc/shadow
 exit 0
 EOF
 chmod +x /home/build/immortalwrt/files/etc/uci-defaults/99-set-password

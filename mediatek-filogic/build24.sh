@@ -125,14 +125,14 @@ cat << 'EOF' > /home/build/immortalwrt/files/etc/uci-defaults/98-wireless-setup
 # 配置 radio0 (通常对应 2.4G)
 uci set wireless.radio0.disabled='0'
 uci set wireless.radio0.htmode='HT40'
-uci set wireless.default_radio0.ssid='OpenWrt2.4G'
+uci set wireless.default_radio0.ssid='OpenWrt_2.4G'
 uci set wireless.default_radio0.encryption='psk2'
 uci set wireless.default_radio0.key='password'
 
 # 配置 radio1 (通常对应 5G)
 uci set wireless.radio1.disabled='0'
 uci set wireless.radio1.htmode='HE160'
-uci set wireless.default_radio1.ssid='OpenWrt5G'
+uci set wireless.default_radio1.ssid='OpenWrt_5G'
 uci set wireless.default_radio1.encryption='psk2'
 uci set wireless.default_radio1.key='password'
 

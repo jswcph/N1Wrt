@@ -190,16 +190,19 @@ hostname="OpenWrt"
 # 记录潜在错误
 exec >/tmp/setup.log 2>&1
 # 设置管理员密码（直接执行，不设前提条件）
-echo "开始设置 root 密码..."
-echo "root:$root_password" | chpasswd
+echo "正在强制更新密码..."
 
-if [ $? -eq 0 ]; then
-    echo "密码设置成功！"
+# 方案 A：如果系统有 chpasswd，这是最稳的
+if command -v chpasswd >/dev/null 2>&1; then
+    echo "root:$root_password" | chpasswd
+# 方案 B：如果没有 chpasswd，用 printf 强制喂给 passwd
 else
-    # 如果 chpasswd 不存在，退回到传统方式
-    (echo "$root_password"; sleep 1; echo "$root_password") | passwd > /dev/null
-    echo "使用 passwd 命令尝试设置完毕"
+    printf "%s\n%s\n" "$root_password" "$root_password" | passwd root
 fi
+
+# 关键一步：OpenWrt 必须 sync 写入 Flash
+sync
+echo "密码设置流程结束"
 # 配置LAN
 if [ -n "$lan_ip_address" ]; then
   uci set network.lan.ipaddr="$lan_ip_address"

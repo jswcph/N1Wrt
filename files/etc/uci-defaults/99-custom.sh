@@ -189,9 +189,16 @@ root_password="password"
 hostname="OpenWrt"
 # 记录潜在错误
 exec >/tmp/setup.log 2>&1
-# 设置管理员密码
-if [ -n "$root_password" ]; then
-  (echo "$root_password"; sleep 1; echo "$root_password") | passwd > /dev/null
+# 设置管理员密码（直接执行，不设前提条件）
+echo "开始设置 root 密码..."
+echo "root:$root_password" | chpasswd
+
+if [ $? -eq 0 ]; then
+    echo "密码设置成功！"
+else
+    # 如果 chpasswd 不存在，退回到传统方式
+    (echo "$root_password"; sleep 1; echo "$root_password") | passwd > /dev/null
+    echo "使用 passwd 命令尝试设置完毕"
 fi
 # 配置LAN
 if [ -n "$lan_ip_address" ]; then

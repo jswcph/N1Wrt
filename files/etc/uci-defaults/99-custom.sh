@@ -194,5 +194,5 @@ if opkg list-installed | grep -q '^luci-app-advancedplus '; then
     sed -i '/\/bin\/zsh/d' /etc/init.d/advancedplus
     sed -i '/\/usr\/bin\/zsh/d' /etc/init.d/advancedplus
 fi
-sed -i "s|^root:[^:]*:|root:\$1\$v9pS879.\$6Mc.B56mN0pM.1mS91pM.1:|g" /etc/shadow
+
 exit 0

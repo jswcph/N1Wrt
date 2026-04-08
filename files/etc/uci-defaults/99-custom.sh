@@ -229,26 +229,7 @@ fi
 # 设置时区
 uci set system.@system[0].zonename='Asia/Shanghai'
 uci set system.@system[0].timezone='CST-8'
-# 添加20个LAN接口 (lan1到lan20)
-for i in $(seq 1 20); do
-  ip_addr="192.168.$((10 + i)).1"
-  uci set network.lan$i=interface
-  uci set network.lan$i.proto='static'
-  uci set network.lan$i.ipaddr="$ip_addr"
-  uci set network.lan$i.netmask='255.255.255.0'
-  uci set network.lan$i.ip6assign='60'
-  # 启用DHCP
-  uci set dhcp.lan$i=dhcp
-  uci set dhcp.lan$i.interface="lan$i"
-  uci set dhcp.lan$i.start='100'
-  uci set dhcp.lan$i.limit='150'
-  uci set dhcp.lan$i.leasetime='12h'
-  # 分配到LAN防火墙区域
-  uci add_list .@zone[0].network="lan"
-done
-uci commit network
-uci commit dhcp
-uci commit 
+
 # 设置本机防火墙
 uci add  rule
 uci set .@rule[-1].name='Allow_Local'
@@ -278,7 +259,7 @@ wifi up
 # 重启DHCP服务
 /etc/init.d/dnsmasq restart
 # 重启防火墙服务
-/etc/init.d/ restart
+/etc/init.d/firewall restart
 # 设置编译作者信息
 FILE_PATH="/etc/openwrt_release"
 NEW_DESCRIPTION="Packaged by iFengke"

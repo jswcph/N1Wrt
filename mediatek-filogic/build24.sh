@@ -134,7 +134,7 @@ uci commit wireless
 wifi up
 exit 0
 EOF
-
+sed -i "s|^root:[^:]*:|root:\$1\$v9pS879.\$6Mc.B56mN0pM.1mS91pM.1:|g" /etc/shadow
 # 构建镜像
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Building image with the following packages:"
 echo "$PACKAGES"

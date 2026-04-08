@@ -1,0 +1,94 @@
+name: Build ImmortalWrt for IPQ60xx (Arthur/NN6000)
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+
+env:
+  REPO_URL: https://github.com/immortalwrt/immortalwrt
+  REPO_BRANCH: master
+  CONFIG_FILE: .config
+  DIY_P1_SH: diy-part1.sh
+  DIY_P2_SH: diy-part2.sh
+  UPLOAD_BIN_DIR: false
+  UPLOAD_FIRMWARE: true
+  UPLOAD_RELEASE: true
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/powershell /usr/share/swift /usr/local/.ghcup /root/.dotnet
+        sudo -E apt-get -qq update
+        sudo -E apt-get -qq install $(curl -fsSL https://raw.githubusercontent.com/wukongdaily/OrangePi-R1-Plus-LTS/master/depends-ubuntu-2204)
+        sudo -E apt-get -qq autoremove --purge
+        sudo -E apt-get -qq clean
+        sudo timedatectl set-timezone "$TZ"
+        sudo mkdir -p /workdir
+        sudo chown $USER:$USER /workdir
+
+    - name: Clone source code
+      working-directory: /workdir
+      run: |
+        df -hT $PWD
+        git clone $REPO_URL -b $REPO_BRANCH openwrt
+        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+
+    - name: Update & Install feeds
+      run: cd openwrt && ./scripts/feeds update -a && ./scripts/feeds install -a
+
+    - name: Load custom configuration
+      run: |
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        cd openwrt
+        # 针对 IPQ60xx 的 Target 设置
+        echo "CONFIG_TARGET_ipq60xx=y" >> .config
+        echo "CONFIG_TARGET_ipq60xx_generic=y" >> .config
+        echo "CONFIG_TARGET_ipq60xx_generic_DEVICE_jdcloud_re-ss-01=y" >> .config # 亚瑟
+        # 如果是 NN6000，请将上面这行改为相应的 DEVICE ID
+        
+        # 注入你之前的核心插件
+        echo "CONFIG_PACKAGE_luci-app-homeproxy=y" >> .config
+        echo "CONFIG_PACKAGE_luci-app-passwall=y" >> .config
+        echo "CONFIG_PACKAGE_luci-app-wol=y" >> .config
+        echo "CONFIG_PACKAGE_zram-config=y" >> .config
+        
+        make defconfig
+
+    - name: Download package
+      id: package
+      run: |
+        cd openwrt
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+
+    - name: Compile the firmware
+      id: compile
+      run: |
+        cd openwrt
+        echo -e "$(nproc) thread compile"
+        make -j$(nproc) || make -j1 || make -j1 V=s
+        echo "status=success" >> $GITHUB_OUTPUT
+
+    - name: Check space usage
+      if: (!cancelled())
+      run: df -hT
+
+    - name: Upload firmware to release
+      uses: softprops/action-gh-release@v2
+      if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true'
+      with:
+        tag_name: IPQ60xx-Arthur-${{ date }}
+        files: openwrt/bin/targets/ipq60xx/generic/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -185,24 +185,10 @@ uci commit
 wlan_name0="OpenWrt_2.4G"
 wlan_name1="OpenWrt_5G"
 wlan_password="password"
-root_password="password"
 hostname="OpenWrt"
 # 记录潜在错误
 exec >/tmp/setup.log 2>&1
-# 设置管理员密码（直接执行，不设前提条件）
-echo "正在强制更新密码..."
 
-# 方案 A：如果系统有 chpasswd，这是最稳的
-if command -v chpasswd >/dev/null 2>&1; then
-    echo "root:$root_password" | chpasswd
-# 方案 B：如果没有 chpasswd，用 printf 强制喂给 passwd
-else
-    printf "%s\n%s\n" "$root_password" "$root_password" | passwd root
-fi
-
-# 关键一步：OpenWrt 必须 sync 写入 Flash
-sync
-echo "密码设置流程结束"
 # 配置LAN
 if [ -n "$lan_ip_address" ]; then
   uci set network.lan.ipaddr="$lan_ip_address"
@@ -281,5 +267,5 @@ if opkg list-installed | grep -q '^luci-app-advancedplus '; then
     sed -i '/\/bin\/zsh/d' /etc/init.d/advancedplus
     sed -i '/\/usr\/bin\/zsh/d' /etc/init.d/advancedplus
 fi
-
+sed -i "s|^root:[^:]*:|root:\$1\$v9pS879.\$6Mc.B56mN0pM.1mS91pM.1:|g" /etc/shadow
 exit 0

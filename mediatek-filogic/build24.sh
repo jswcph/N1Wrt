@@ -110,15 +110,6 @@ config timeserver 'ntp'
     option enable_server '0'
 EOF
 
-#更改默认密码
-mkdir -p /home/build/immortalwrt/files/etc/uci-defaults
-cat << 'EOF' > /home/build/immortalwrt/files/etc/uci-defaults/99-set-password
-#!/bin/sh
-# 使用 chpasswd 的 -m 参数强制指定 MD5 算法（对应 $1$）
-echo 'root:password' | chpasswd -m
-exit 0
-EOF
-chmod +x /home/build/immortalwrt/files/etc/uci-defaults/99-set-password
 
 # 创建 WiFi 自动配置脚本
 mkdir -p /home/build/immortalwrt/files/etc/uci-defaults

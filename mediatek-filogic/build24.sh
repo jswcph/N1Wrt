@@ -109,14 +109,6 @@ config timeserver 'ntp'
     option enable_server '0'
 EOF
 
-# 设置默认初始密码为 password
-mkdir -p /home/build/immortalwrt/files/etc/uci-defaults
-cat << 'EOF' > /home/build/immortalwrt/files/etc/uci-defaults/99-set-initial-password
-#!/bin/sh
-echo "root:password" | chpasswd
-exit 0
-EOF
-
 # 创建 WiFi 自动配置脚本
 mkdir -p /home/build/immortalwrt/files/etc/uci-defaults
 cat << 'EOF' > /home/build/immortalwrt/files/etc/uci-defaults/98-wireless-setup

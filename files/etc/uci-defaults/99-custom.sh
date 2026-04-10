@@ -1,5 +1,7 @@
 #!/bin/sh
 # 99-custom.sh 就是immortalwrt固件首次启动时运行的脚本 位于固件内的/etc/uci-defaults/99-custom.sh
+# --- 修改这里：设置初始密码为 password ---
+echo "root:password" | chpasswd
 # Log file for debugging
 LOGFILE="/etc/config/uci-defaults-log.txt"
 echo "Starting 99-custom.sh at $(date)" >>$LOGFILE
@@ -267,5 +269,5 @@ if opkg list-installed | grep -q '^luci-app-advancedplus '; then
     sed -i '/\/bin\/zsh/d' /etc/init.d/advancedplus
     sed -i '/\/usr\/bin\/zsh/d' /etc/init.d/advancedplus
 fi
-sed -i "s|^root:[^:]*:|root:\$1\$v9pS879.\$6Mc.B56mN0pM.1mS91pM.1:|g" /etc/shadow
+
 exit 0

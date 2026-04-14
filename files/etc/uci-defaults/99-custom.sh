@@ -1,7 +1,5 @@
 #!/bin/sh
 # 99-custom.sh 就是immortalwrt固件首次启动时运行的脚本 位于固件内的/etc/uci-defaults/99-custom.sh
-# --- 修改这里：设置初始密码为 password ---
-echo "root:password" | chpasswd
 # Log file for debugging
 LOGFILE="/etc/config/uci-defaults-log.txt"
 echo "Starting 99-custom.sh at $(date)" >>$LOGFILE
@@ -15,6 +13,9 @@ uci set .@zone[1].input='ACCEPT'
 uci add dhcp domain
 uci set "dhcp.@domain[-1].name=time.android.com"
 uci set "dhcp.@domain[-1].ip=203.107.6.88"
+
+# --- 修改这里：设置初始密码为 password ---
+echo "root:password" | chpasswd
 
 # 检查配置文件pppoe-settings是否存在 该文件由build.sh动态生成
 SETTINGS_FILE="/etc/config/pppoe-settings"

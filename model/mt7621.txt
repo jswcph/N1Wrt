@@ -265,3 +265,4 @@ zyxel_nwa50ax
 zyxel_nwa55axe
 zyxel_wap6805
 zyxel_wsm20
+Phicomm K2P

@@ -83,11 +83,11 @@ fi
 # ================= USB & CPE 模块支持 =================
 echo "Adding USB and CPE support packages..."
 # 1. 基础驱动
-PACKAGES="$PACKAGES kmod-usb2 kmod-usb3 kmod-usb-net"
+PACKAGES="$PACKAGES kmod-usb2 kmod-usb3 kmod-usb-net kmod-nls-base kmod-usb-core"
 # 2. 协议支持
-PACKAGES="$PACKAGES kmod-usb-net-cdc-ether kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-qmi-wwan kmod-usb-net-cdc-mbim"
+PACKAGES="$PACKAGES kmod-usb-net-cdc-ether kmod-usb-net-ipheth kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-qmi-wwan kmod-usb-net-cdc-mbim"
 # 3. 拨号工具
-PACKAGES="$PACKAGES kmod-usb-serial kmod-usb-serial-option kmod-usb-serial-wwan"
+PACKAGES="$PACKAGES kmod-usb-serial kmod-usb-serial-option kmod-usb-serial-wwan libimobiledevice-utils usbmuxd"
 # 4. 界面与管理 (注意：usbutils 没有横杠)
 PACKAGES="$PACKAGES luci-proto-modemmanager luci-proto-qmi luci-proto-3g modemmanager usbutils"
 # ==============================================================

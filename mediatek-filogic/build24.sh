@@ -79,7 +79,16 @@ if [ "$INCLUDE_DOCKER" = "yes" ]; then
     PACKAGES="$PACKAGES luci-i18n-dockerman-zh-cn"
     echo "Adding package: luci-i18n-dockerman-zh-cn"
 fi
+# argon主题设置
+if [ ! -f /etc/config/argon ]; then
+    touch /etc/config/argon
+    uci add argon global
+fi
 
+uci set argon.@global[0].primary='#4682B4'
+uci set argon.@global[0].dark_primary='#808000'
+uci set argon.@global[0].transparency='0.3'
+uci commit argon
 # 若构建openclash 则添加内核
 if echo "$PACKAGES" | grep -q "luci-app-openclash"; then
     echo "✅ 已选择 luci-app-openclash，添加 openclash core"

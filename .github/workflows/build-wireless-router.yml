@@ -612,7 +612,6 @@ jobs:
                   ;;
               # 下列机型目前没有24.10 因此采用23.05.4分支来构建
               cmcc_rax3000m-emmc-ubootmod | \
-              cmcc_rax3000m-nand-ubootmod | \
               cmcc_a10 | \
               abt_asr3000-ubootmod | \
               imou_lc-hx3001-ubootmod | \

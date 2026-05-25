@@ -89,7 +89,7 @@ PACKAGES="$PACKAGES kmod-usb-net-cdc-ether kmod-usb-net-ipheth kmod-usb-net-rndi
 # 3. 拨号工具
 PACKAGES="$PACKAGES kmod-usb-serial kmod-usb-serial-option kmod-usb-serial-wwan libimobiledevice-utils usbmuxd"
 # 4. 界面与管理 (注意：usbutils 没有横杠)
-PACKAGES="$PACKAGES luci-proto-modemmanager luci-proto-qmi luci-proto-3g modemmanager usbutils luci-app-mmconfig "
+PACKAGES="$PACKAGES luci-proto-modemmanager luci-proto-qmi luci-proto-3g modemmanager usbutils"
 # ==============================================================
 
 # 若构建openclash 则添加内核

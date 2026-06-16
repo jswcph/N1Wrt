@@ -671,7 +671,7 @@ jobs:
         uses: softprops/action-gh-release@v2.2.1
         with:
           tag_name: ${{ github.event.inputs.profile }}
-          name: Xiaomi-Ax3000T-24.10.2
+          name: CMCC-A10-24CMCC-A10-24.10
           body_path: ${{ github.workspace }}/mediatek-filogic/info.md
           files: |
             ${{ github.workspace }}/bin/targets/${{ env.platform }}/*

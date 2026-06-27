@@ -671,7 +671,7 @@ jobs:
         uses: softprops/action-gh-release@v2.2.1
         with:
           tag_name: ${{ github.event.inputs.profile }}
-          name: CMCC-RAX3000Me-24.10.2
+          name: CMCC-XR30-Nand
           body_path: ${{ github.workspace }}/mediatek-filogic/info.md
           files: |
             ${{ github.workspace }}/bin/targets/${{ env.platform }}/*
